@@ -10,41 +10,38 @@
       padding: 40px;
       background: linear-gradient(to right, #e0f7fa, #e1bee7);
       color: #333;
-      max-width: 700px;
+      max-width: 800px;
       margin: auto;
       border-radius: 12px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.1);
       text-align: center;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeIn 1s ease forwards;
     }
-
-    @keyframes fadeIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
     h2 {
       color: #4a148c;
     }
-
+    .intro {
+      font-size: 1em;
+      margin-bottom: 30px;
+      text-align: left;
+      background: #ffffffaa;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    .intro strong {
+      color: #000;
+    }
     label {
       font-weight: 700;
       display: block;
       margin-top: 20px;
       text-align: left;
     }
-
     .description {
       font-size: 0.95em;
       color: #444;
       text-align: left;
       margin-bottom: 10px;
     }
-
     input[type="number"] {
       width: 100%;
       padding: 10px;
@@ -54,7 +51,6 @@
       border-radius: 6px;
       box-sizing: border-box;
     }
-
     button {
       margin-top: 25px;
       padding: 12px 20px;
@@ -65,13 +61,10 @@
       border-radius: 6px;
       cursor: pointer;
       width: 100%;
-      transition: background-color 0.3s ease;
     }
-
     button:hover {
       background-color: #6a1b9a;
     }
-
     .result {
       margin-top: 30px;
       font-size: 1.2em;
@@ -79,16 +72,7 @@
       padding: 15px;
       border-radius: 6px;
       font-weight: bold;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
     }
-
-    .result.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
     .footer {
       text-align: center;
       margin-top: 40px;
@@ -100,11 +84,19 @@
 <body>
   <h2>DPS Optimizer</h2>
 
+  <div class="intro">
+    <p><strong>A tool that helps you maximize your DPS</strong> by optimally allocating your available <strong>Skillpoints</strong> after the daily reset, if you're aiming to reach your highest stage.</p>
+    <p>The tool calculates and displays the ideal number of levels to assign to each stat in order to achieve the highest possible DPS output.</p>
+    <p>You need to input your external <strong>Attack Speed</strong> bonus as the sum of <strong>pet</strong>, <strong>equipment</strong>, and <strong>skin</strong> bonuses.</p>
+    <p><strong>Do not include</strong> the Video Boost bonus, as it multiplies the final ATS value.<br>
+    <strong>Also exclude</strong> the bonus from the third mythical Fairy, as it only applies up to 80% of your max stage — and this tool is designed to help you push beyond that.</p>
+  </div>
+
   <label for="skillpoints">Skillpoints:</label>
   <div class="description">The number of skillpoints available after a reset</div>
   <input type="number" id="skillpoints" value="0" min="0">
 
-  <label for="extraSpeed">External Attack Speed bonuses (%):</label>
+  <label for="extraSpeed">Attack Speed extra (%):</label>
   <div class="description">Total bonus from pet, equipment (25 with Viking set), and skins (60 if all owned). Enter an integer value</div>
   <input type="number" id="extraSpeed" value="0" min="0">
 
@@ -153,11 +145,9 @@
         }
       }
 
-      const output = document.getElementById("output");
-      output.innerText =
+      document.getElementById("output").innerText =
         `Damage optimal Lv: ${bestDamageLevel}\nAttack Speed optimal Lv: ${bestSpeedLevel}`;
-      output.classList.add("show");
     }
-  </script>   
+  </script>
 </body>
 </html>
