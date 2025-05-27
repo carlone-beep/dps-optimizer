@@ -15,22 +15,36 @@
       border-radius: 12px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.1);
       text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 1s ease forwards;
     }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     h2 {
       color: #4a148c;
     }
+
     label {
       font-weight: 700;
       display: block;
       margin-top: 20px;
       text-align: left;
     }
+
     .description {
       font-size: 0.95em;
       color: #444;
       text-align: left;
       margin-bottom: 10px;
     }
+
     input[type="number"] {
       width: 100%;
       padding: 10px;
@@ -40,6 +54,7 @@
       border-radius: 6px;
       box-sizing: border-box;
     }
+
     button {
       margin-top: 25px;
       padding: 12px 20px;
@@ -50,10 +65,13 @@
       border-radius: 6px;
       cursor: pointer;
       width: 100%;
+      transition: background-color 0.3s ease;
     }
+
     button:hover {
       background-color: #6a1b9a;
     }
+
     .result {
       margin-top: 30px;
       font-size: 1.2em;
@@ -61,7 +79,16 @@
       padding: 15px;
       border-radius: 6px;
       font-weight: bold;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
+
+    .result.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     .footer {
       text-align: center;
       margin-top: 40px;
@@ -99,7 +126,7 @@
     function calculateOptimal() {
       const skillpoints = parseInt(document.getElementById("skillpoints").value);
       const attackSpeedExtra = parseFloat(document.getElementById("extraSpeed").value) / 100;
-      const maxLevel = 1000;
+      const maxLevel = 100000;
       const costs = precalculateCosts(maxLevel);
 
       let bestDps = 0, bestDamageLevel = 0, bestSpeedLevel = 0;
@@ -126,9 +153,11 @@
         }
       }
 
-      document.getElementById("output").innerText =
+      const output = document.getElementById("output");
+      output.innerText =
         `Damage optimal Lv: ${bestDamageLevel}\nAttack Speed optimal Lv: ${bestSpeedLevel}`;
+      output.classList.add("show");
     }
-  </script>
+  </script>   
 </body>
 </html>
