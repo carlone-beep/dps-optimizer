@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DPS Optimizer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      padding: 40px;
+      background: linear-gradient(to right, #e0f7fa, #e1bee7);
+      color: #333;
+      max-width: 700px;
+      margin: auto;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h2 {
+      color: #4a148c;
+    }
+    label {
+      font-weight: 700;
+      display: block;
+      margin-top: 20px;
+      text-align: left;
+    }
+    .description {
+      font-size: 0.95em;
+      color: #444;
+      text-align: left;
+      margin-bottom: 10px;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 25px;
+      padding: 12px 20px;
+      font-size: 1em;
+      background-color: #7b1fa2;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #6a1b9a;
+    }
+    .result {
+      margin-top: 30px;
+      font-size: 1.2em;
+      background: #f3e5f5;
+      padding: 15px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h2>DPS Optimizer</h2>
+
+  <label for="skillpoints">Skillpoints:</label>
+  <div class="description">The number of skillpoints available after a reset.</div>
+  <input type="number" id="skillpoints" value="0" min="0">
+
+  <label for="extraSpeed">Attack Speed extra (%):</label>
+  <div class="description">Total bonus from pets, equipment (25 with Viking set), and skins (60 if all owned). Enter an integer value.</div>
+  <input type="number" id="extraSpeed" value="0" min="0">
+
+  <button onclick="calculateOptimal()">Calculate Optimal Levels</button>
+
+  <div class="result" id="output"></div>
+
+  <div class="footer">Powered by Carlone</div>
+
+  <script>
+    function precalculateCosts(maxLevel) {
+      const costs = Array(maxLevel + 1).fill(0);
+      for (let lv = 1; lv <= maxLevel; lv++) {
+        costs[lv] = costs[lv - 1] + Math.floor((lv - 1) / 10) + 1;
+      }
+      return costs;
+    }
+
+    function calculateOptimal() {
+      const skillpoints = parseInt(document.getElementById("skillpoints").value);
+      const attackSpeedExtra = parseFloat(document.getElementById("extraSpeed").value) / 100;
+      const maxLevel = 1000;
+      const costs = precalculateCosts(maxLevel);
+
+      let bestDps = 0, bestDamageLevel = 0, bestSpeedLevel = 0;
+
+      for (let dmgLv = 0; dmgLv <= maxLevel; dmgLv++) {
+        const costDmg = costs[dmgLv];
+        if (costDmg > skillpoints) break;
+
+        const remaining = skillpoints - costDmg;
+
+        for (let spdLv = 0; spdLv <= maxLevel; spdLv++) {
+          const costSpd = costs[spdLv];
+          if (costSpd > remaining) break;
+
+          const dmgMult = 1 + 0.05 * dmgLv;
+          const spdMult = 1 + (0.01 * spdLv) / (1 + attackSpeedExtra);
+          const dps = dmgMult * spdMult;
+
+          if (dps > bestDps) {
+            bestDps = dps;
+            bestDamageLevel = dmgLv;
+            bestSpeedLevel = spdLv;
+          }
+        }
+      }
+
+      document.getElementById("output").innerText =
+        `Damage optimal Lv: ${bestDamageLevel}\nAttack Speed optimal Lv: ${bestSpeedLevel}`;
+    }
+  </script>
+</body>
+</html>
